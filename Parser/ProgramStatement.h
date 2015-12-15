@@ -8,7 +8,7 @@ class Variable
 {
     public:
         Variable(std::string var_type, std::string var_name);
-        ~Variable();
+        virtual ~Variable();
         std::string Name();
     private:
     protected:
@@ -20,6 +20,7 @@ class ProgramStatement
 {
     public:
         ProgramStatement();
+        virtual ~ProgramStatement();
         virtual void execute() = 0;             // implement this, children
         virtual void print_self() = 0;
     protected:

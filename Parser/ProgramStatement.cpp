@@ -19,6 +19,8 @@ ProgramStatement::ProgramStatement()
     //ctor
 }
 
+ProgramStatement::~ProgramStatement() {}
+
 Assignment::Assignment(Variable *target) : assignment_target(target) {}
 
 Assignment::~Assignment()

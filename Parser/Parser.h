@@ -14,10 +14,14 @@ class Parser
     public:
         Parser();
         virtual ~Parser();
-        std::vector<ProgramStatement> parse(std::string filename);
+        std::vector<ProgramStatement*> *parse(std::string filename);
     protected:
     private:
-
+        std::string readFile(std::string f);
+        ProgramStatement *get_statement(Tokeniser *tk);
+        ProgramStatement *get_assignment(Tokeniser *tk, std::string var_name);
+        ProgramStatement *get_declaration(Tokeniser *tk, std::string var_type);
+        ProgramStatement *get_function_call(Tokeniser *tk, std::string func_name);
 };
 
 #endif // PARSER_H

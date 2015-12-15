@@ -1,44 +1,32 @@
 #include <iostream>
-#include <fstream>
-#include <sstream>
-#include <string>
-#include <boost/tokenizer.hpp>
-#include "Tokeniser/Tokeniser.h"
+#include <vector>
+#include "ProgramStatement.h"
+#include "Parser.h"
 
 using namespace std;
 
 
-string readFile(string);       // reads the contents of a textfile and returns them in the form of a vector
-                                            // whatever that is
-
-string readFile(string f)
-{
-    char *filename = &f[0];
-    string app;
-    string line;
-
-    ifstream inFile;
-    inFile.open(filename);//open the input file
-
-    stringstream strStream;
-    strStream << inFile.rdbuf();//read the file
-    app = strStream.str();//str holds the content of the file
-    inFile.close();
-
-    return app;
-}
-
-
 int main()
 {
-    string file_contents = readFile("hello_world.N");
+    Parser *parser = new Parser();
 
-    Tokeniser* tk = new Tokeniser(file_contents);
-    while (tk->more_data())
+    vector<ProgramStatement*> *interpreted_program = parser -> parse("hello_world.N");
+
+    for (vector<ProgramStatement*>::iterator it = interpreted_program->begin(); it != interpreted_program->end(); ++it)
     {
-        Token toke = tk->currentToken();
-        cout << toke.type << ": " << toke.data_payload << endl;
+        ProgramStatement *ptr = *it;
+        ptr -> print_self();
     }
 
-    delete (tk);
+
+    // delete all the shit that the parser produced for us
+    // geez
+    // what I wouldn't give for garbage collection
+    for (vector<ProgramStatement*>::iterator it = interpreted_program->begin(); it != interpreted_program->end(); ++it)
+    {
+        ProgramStatement *ptr = *it;
+        delete (ptr);
+    }
+    delete (interpreted_program);
+    delete (parser);
 }
