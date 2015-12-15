@@ -31,7 +31,11 @@
 		<Compiler>
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
+			<Add directory="../../boost_1_59_0/boost" />
 		</Compiler>
+		<Linker>
+			<Add directory="$(#boost.lib)" />
+		</Linker>
 		<Unit filename="main.cpp" />
 		<Extensions>
 			<envvars />

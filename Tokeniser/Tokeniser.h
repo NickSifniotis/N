@@ -20,6 +20,7 @@ class Tokeniser
         boost::tokenizer<boost::char_separator<char> > *tk;     // the basic tokeniser itself
         boost::tokenizer<boost::char_separator<char> >::iterator tk_iterator;      // the iterator
         std::string currentDataPayload();            // returns the defererenced iterator, in the form of a string
+        void next_no_whitespace();
 };
 
 #endif // TOKENISER_H

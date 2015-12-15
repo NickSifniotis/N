@@ -1,0 +1,5 @@
+print ("Hello World!")
+number counter = 0
+number second_number = "String literal!"
+print(3.14 + 5 + "gdfjh durka    durka" + counter)
+
