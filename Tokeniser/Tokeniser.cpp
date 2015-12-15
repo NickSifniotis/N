@@ -123,6 +123,28 @@ Token Tokeniser::currentToken()
         res.type = STRING_LITERAL;
         res.data_payload = payload;
     }
+    else if (currentDataPayload()[0] >= '0' && currentDataPayload()[0] <= '9')
+    {
+        string payload = currentDataPayload();
+        res.type = NUMBER_LITERAL;
+        next();
+
+        if (!currentDataPayload().compare("."))
+        {
+            next();
+            if (currentDataPayload()[0] >= '0' && currentDataPayload()[0] <= '9')
+            {
+                payload += "." + currentDataPayload();
+                next();
+            }
+            if (more_data() && !currentDataPayload().compare(" "))
+                next_no_whitespace();
+        }
+        else if (more_data() && !currentDataPayload().compare(" "))
+            next_no_whitespace();
+
+        res.data_payload = payload;
+    }
     else
     {
         res.data_payload = currentDataPayload();
