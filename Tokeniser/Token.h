@@ -3,7 +3,7 @@
 
 #include <string>
 
-enum TokenType
+enum class TokenType
 {
     NONE,
     PLUS,
@@ -29,7 +29,8 @@ enum TokenType
     PLUS_EQUALS,
     MINUS_EQUALS,
     MULT_EQUALS,
-    DIV_EQUALS
+    DIV_EQUALS,
+    END_OF_FILE
 };
 
 
@@ -39,6 +40,7 @@ class Token
         TokenType type;                 // the type of token, as interpreted
         std::string data_payload;            // the string itself
         Token();
+        void print_self();
     protected:
     private:
 };

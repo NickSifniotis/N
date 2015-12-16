@@ -33,6 +33,12 @@ bool Tokeniser::more_data()
 
 Token Tokeniser::currentToken()
 {
+    return current_token;
+}
+
+
+void Tokeniser::advance()
+{
     /**
     Parses the next complete token, sets and returns a Token structure that contains the
     sort of token that this is, along with the data string (if relevant).
@@ -41,17 +47,24 @@ Token Tokeniser::currentToken()
     **/
     Token res;
 
+    if (!more_data())
+    {
+        res.type = TokenType::END_OF_FILE;
+        current_token = res;            // todo fix this shitty workaround.
+        return;
+    }
+
     if (!currentDataPayload().compare("+"))
     {
         next_no_whitespace();
 
         if (!currentDataPayload().compare("="))
         {
-            res.type = PLUS_EQUALS;
+            res.type = TokenType::PLUS_EQUALS;
             next_no_whitespace();
         }
         else
-            res.type = PLUS;
+            res.type = TokenType::PLUS;
     }
     else if (!currentDataPayload().compare("-"))
     {
@@ -59,11 +72,11 @@ Token Tokeniser::currentToken()
 
         if (!currentDataPayload().compare("="))
         {
-            res.type = MINUS_EQUALS;
+            res.type = TokenType::MINUS_EQUALS;
             next_no_whitespace();
         }
         else
-            res.type = MINUS;
+            res.type = TokenType::MINUS;
     }
     else if (!currentDataPayload().compare("*"))
     {
@@ -71,11 +84,11 @@ Token Tokeniser::currentToken()
 
         if (!currentDataPayload().compare("="))
         {
-            res.type = MULT_EQUALS;;
+            res.type = TokenType::MULT_EQUALS;;
             next_no_whitespace();
         }
         else
-            res.type = MULT;
+            res.type = TokenType::MULT;
     }
     else if (!currentDataPayload().compare("/"))
     {
@@ -83,31 +96,31 @@ Token Tokeniser::currentToken()
 
         if (!currentDataPayload().compare("="))
         {
-            res.type = DIV_EQUALS;
+            res.type = TokenType::DIV_EQUALS;
             next_no_whitespace();
         }
         else
-            res.type = DIV;
+            res.type = TokenType::DIV;
     }
     else if (!currentDataPayload().compare("%"))
     {
         next_no_whitespace();
-        res.type = MOD;
+        res.type = TokenType::MOD;
     }
     else if (!currentDataPayload().compare("="))
     {
         next_no_whitespace();
-        res.type = EQUALS;
+        res.type = TokenType::EQUALS;
     }
     else if (!currentDataPayload().compare("("))
     {
         next_no_whitespace();
-        res.type = L_BRACKET;
+        res.type = TokenType::L_BRACKET;
     }
     else if (!currentDataPayload().compare(")"))
     {
         next_no_whitespace();
-        res.type = R_BRACKET;
+        res.type = TokenType::R_BRACKET;
     }
     else if (!currentDataPayload().compare("\""))
     {
@@ -120,13 +133,13 @@ Token Tokeniser::currentToken()
             next();
         }
         next_no_whitespace();
-        res.type = STRING_LITERAL;
+        res.type = TokenType::STRING_LITERAL;
         res.data_payload = payload;
     }
     else if (currentDataPayload()[0] >= '0' && currentDataPayload()[0] <= '9')
     {
         string payload = currentDataPayload();
-        res.type = NUMBER_LITERAL;
+        res.type = TokenType::NUMBER_LITERAL;
         next();
 
         if (!currentDataPayload().compare("."))
@@ -149,10 +162,10 @@ Token Tokeniser::currentToken()
     {
         res.data_payload = currentDataPayload();
         next_no_whitespace();
-        res.type = ALPHANUMERIC;
+        res.type = TokenType::ALPHANUMERIC;
     }
 
-    return res;
+    current_token = res;
 }
 
 

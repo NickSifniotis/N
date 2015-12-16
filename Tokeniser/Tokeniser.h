@@ -13,14 +13,16 @@ class Tokeniser
         Tokeniser(std::string data_to_tokenise);     // construct the tokeniser and get ready to rumble.
         ~Tokeniser();                           // DESTRUCTOR
         Token currentToken();                   // returns the current token.
-        void next();                            // advances to the next token.
-        void next_no_whitespace();
+        void advance();
         bool more_data();                       // returns true if next will return useful data, false otherwise.
     protected:
     private:
         boost::tokenizer<boost::char_separator<char> > *tk;     // the basic tokeniser itself
         boost::tokenizer<boost::char_separator<char> >::iterator tk_iterator;      // the iterator
         std::string currentDataPayload();            // returns the defererenced iterator, in the form of a string
+        void next();                            // advances to the next token.
+        void next_no_whitespace();
+        Token current_token;
 };
 
 #endif // TOKENISER_H

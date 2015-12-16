@@ -72,23 +72,102 @@ void ExpressionTreeSingleOperand::set_child(ExpressionTreeNode *child)
 }
 
 
-ExpressionTreeLiteral::ExpressionTreeLiteral(double value) : my_value(value) {}
+ExpressionTreeLiteral::ExpressionTreeLiteral(double value)
+{
+    i_am_string = false;
+    my_value = malloc(sizeof(double));
+    double *holding = (double*) my_value;
+    *holding = value;
+}
+
+ExpressionTreeLiteral::ExpressionTreeLiteral(string value)
+{
+    i_am_string = true;
+    my_value = new string(value);
+}
+
+ExpressionTreeLiteral::~ExpressionTreeLiteral()
+{
+    if (i_am_string)
+    {
+        string *ptr = (string*) my_value;
+        delete (ptr);
+    }
+    else
+    {
+        double *ptr = (double*) my_value;
+        free (ptr);
+    }
+}
 
 void ExpressionTreeLiteral::print_self()
 {
-    cout << my_value;
+    if (i_am_string)
+    {
+        string *ptr = (string*) my_value;
+        cout << *ptr;
+    }
+    else
+    {
+        double *ptr = (double*) my_value;
+        cout << *ptr;
+    }
 }
 
 double ExpressionTreeLiteral::evaluate()
 {
-    return my_value;
+    if (i_am_string)
+        return 0.0;
+        // todo that's shit, fix it
+
+    double *ptr = (double*) my_value;
+    return *ptr;
+}
+
+
+ExpressionTreeVariable::ExpressionTreeVariable(string name) : my_name(name)
+{
+    my_parameters = new vector<ExpressionTreeNode *>();
+}
+
+ExpressionTreeVariable::~ExpressionTreeVariable()
+{
+    for (vector<ExpressionTreeNode*>::iterator it = my_parameters->begin(); it != my_parameters->end(); ++it)
+    {
+        ExpressionTreeNode *ptr = *it;
+        delete (ptr);
+    }
+    delete (my_parameters);
+}
+
+double ExpressionTreeVariable::evaluate()
+{
+    return 0;
+}
+
+void ExpressionTreeVariable::add_parameter(ExpressionTreeNode *param)
+{
+    my_parameters -> push_back(param);
+}
+
+void ExpressionTreeVariable::print_self()
+{
+    cout << "VARIABLE " + my_name + "(";
+    for (vector<ExpressionTreeNode*>::iterator it = my_parameters->begin(); it != my_parameters->end(); ++it)
+    {
+        ExpressionTreeNode *ptr = *it;
+        cout << " [";
+        ptr -> print_self();
+        cout << " ]";
+    }
+    cout << ")";
 }
 
 
 ExpressionTreeDualOperand::ExpressionTreeDualOperand(DoubleOperands instruction, ExpressionTreeNode *left, ExpressionTreeNode *right):
-    my_code(instruction),
     my_left_child(left),
-    my_right_child(right)
+    my_right_child(right),
+    my_code(instruction)
     {
         // ahahhahahahhaahahahah
     }
@@ -114,6 +193,8 @@ void ExpressionTreeDualOperand::set_right(ExpressionTreeNode *right)
 
 void ExpressionTreeDualOperand::print_self()
 {
+    cout << " [ ";
+
     if (my_left_child != nullptr)
         my_left_child -> print_self();
     else
@@ -148,6 +229,8 @@ void ExpressionTreeDualOperand::print_self()
         cout << endl << "Print_self error: Unable to print self as current dual operand node has no right child." << endl;
         exit(-1);
     }
+
+    cout << " ] ";
 }
 
 double ExpressionTreeDualOperand::evaluate()

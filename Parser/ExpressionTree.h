@@ -1,6 +1,9 @@
 #ifndef EXPRESSIONTREE_H
 #define EXPRESSIONTREE_H
 
+#include <string>
+#include <vector>
+
 
 enum class SingleOperands
 {
@@ -49,11 +52,30 @@ class ExpressionTreeLiteral : public ExpressionTreeNode
 {
     public:
         ExpressionTreeLiteral(double value);
+        ExpressionTreeLiteral(std::string value);
+        ~ExpressionTreeLiteral();
         void print_self();
         double evaluate();
     private:
     protected:
-        double my_value;
+        bool i_am_string;
+        void *my_value;
+};
+
+
+class ExpressionTreeVariable : public ExpressionTreeNode
+{
+    // this crafty class handles both variables per se, and function calls too
+    public:
+        ExpressionTreeVariable(std::string name);
+        virtual ~ExpressionTreeVariable();
+        void add_parameter (ExpressionTreeNode *param);
+        void print_self();
+        double evaluate();
+    private:
+    protected:
+        std::string my_name;
+        std::vector <ExpressionTreeNode *> *my_parameters;
 };
 
 

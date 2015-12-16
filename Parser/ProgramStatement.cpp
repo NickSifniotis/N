@@ -13,6 +13,11 @@ string Variable::Name()
     return my_name;
 }
 
+string Variable::Type()
+{
+    return my_type;
+}
+
 
 ProgramStatement::ProgramStatement()
 {
@@ -52,4 +57,57 @@ void Assignment::print_self()
 void Assignment::execute()
 {
     // at this stage, do nothing.
+}
+
+
+FunctionCall::FunctionCall(string name)
+{
+    my_function = new ExpressionTreeVariable(name);
+}
+
+FunctionCall::~FunctionCall()
+{
+    delete (my_function);
+}
+
+void FunctionCall::add_parameter(ExpressionTreeNode *param)
+{
+    my_function -> add_parameter(param);
+}
+
+void FunctionCall::print_self()
+{
+    cout << "FUNCTION CALL ";
+    my_function -> print_self();
+}
+
+void FunctionCall::execute()
+{
+    // todo
+}
+
+ExpressionTreeNode* FunctionCall::get_returner()
+{
+    return my_function;
+}
+
+
+Declaration::Declaration (string type, string name)
+{
+    my_variable = new Variable(type, name);
+}
+
+Declaration::~Declaration()
+{
+    delete (my_variable);
+}
+
+void Declaration::execute()
+{
+    // do nothing
+}
+
+void Declaration::print_self()
+{
+    cout << "DECLARING " << my_variable->Name() << " TO BE TYPE " << my_variable->Type();
 }

@@ -16,6 +16,7 @@ int main()
     {
         ProgramStatement *ptr = *it;
         ptr -> print_self();
+        cout << endl;
     }
 
 
